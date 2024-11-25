@@ -99,18 +99,18 @@ function Cards(props) {
   return (
     <>
       <Notify notify={notify} />
-      <div className="flex justify-center m-10 gap-5  flex-wrap h-max ">
+      <div className="flex justify-center m-10 gap-5  flex-wrap h-full pb-10  ">
         {prod.map((product, index) => (
           <div
             key={index}
-            className="border p-5 rounded-lg flex flex-col gap-y-3 items-center w-56"
+            className="border p-5 rounded-lg flex flex-col gap-y-3 items-center w-56 hover:bg-gradient-to-r from-gray-600 via-gray-500/25 to-gray-600 hover:shadow-lg"
           >
             <h2 className="text-center">{product.name}</h2>
             <p className="text-center">{product.description}</p>
-            <p className="text-center">Price: {product.price}</p>
+            <p className="text-center">Price: Rs.{product.price}</p>
             <div className="mt-auto">
               <button
-                className="bg-orange-500 p-1 px-4 rounded-lg text-white w-fit"
+                className="bg-orange-500 p-1 px-4 rounded-lg text-white w-fit hover:bg-orange-500/85"
                 onClick={cartUpdating}
               >
                 Order Now
