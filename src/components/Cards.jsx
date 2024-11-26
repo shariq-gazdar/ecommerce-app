@@ -103,7 +103,7 @@ function Cards(props) {
         {prod.map((product, index) => (
           <div
             key={index}
-            className="border p-5 rounded-lg flex flex-col gap-y-3 items-center w-56 hover:bg-gradient-to-r from-gray-600 via-gray-500/25 to-gray-600 hover:shadow-lg"
+            className="border p-5 rounded-lg flex flex-col gap-y-3 items-center w-56 hover:bg-gradient-to-r from-slate-800 via-slate-600/25 to-slate-800 hover:shadow-lg"
           >
             <h2 className="text-center">{product.name}</h2>
             <p className="text-center">{product.description}</p>
