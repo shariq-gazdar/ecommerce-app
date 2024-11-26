@@ -1,8 +1,7 @@
 import { useState } from "react";
 
-function Signup(props) {
-  const [passMatch, setPassMatch] = useState(false);
-
+function Login(props) {
+  const [LoginMatch, setLoginMatch] = useState(false);
   const checkPass = () => {
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
@@ -23,8 +22,8 @@ function Signup(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     checkPass();
-    if (passMatch) {
-      const currentUser = {
+    if (login) MatchL
+ t LoginMatchcurrentUser = {
         name: document.getElementById("name").value,
         email: document.getElementById("email").value,
         password: document.getElementById("password").value,
@@ -49,13 +48,6 @@ function Signup(props) {
         </p>
         <form className="flex flex-col" onSubmit={handleSubmit}>
           <input
-            type="text"
-            id="name"
-            placeholder="Enter your name"
-            className="mb-4 p-3 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-          <input
             type="email"
             id="email"
             placeholder="Enter your email"
@@ -69,13 +61,6 @@ function Signup(props) {
             className="mb-4 p-3 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
-          <input
-            type="password"
-            id="confirmPassword"
-            placeholder="Confirm your password"
-            className="mb-4 p-3 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
           <h1 id="statusLine" className="text-center py-2 invisible">
             Status Line
           </h1>
@@ -83,7 +68,7 @@ function Signup(props) {
             type="submit"
             className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-3 rounded-lg shadow-lg hover:scale-105 transform transition-transform duration-300"
           >
-            Sign Up
+            Login
           </button>
         </form>
       </div>
