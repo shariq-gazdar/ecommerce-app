@@ -6,11 +6,19 @@ function Cards(props) {
 
   useEffect(() => {
     let products = [
-      { name: "Rice", description: "1kg bag of basmati rice", price: "200" },
+      {
+        name: "Rice",
+        description: "1kg bag of basmati rice",
+        price: "200",
+        image:
+          "https://media.gettyimages.com/id/872343048/photo/raw-rice-grain-and-dry-rice-plant-on-wooden-table.jpg?s=612x612&w=0&k=20&c=DgvRQtGlRoLh-lmqyjonFqDR-qNpXP5_UXVj8U1CL80=",
+      },
       {
         name: "Wheat Flour",
         description: "2kg packet of whole wheat flour",
         price: "300",
+        image:
+          "https://media.gettyimages.com/id/480241244/photo/bowl-filled-with-wheat-flour.jpg?s=612x612&w=0&k=20&c=GfezwqMcv8sfHjL750Ujk_rEc-4rQB5fpM2MRTizTi0=",
       },
       { name: "Sugar", description: "1kg granulated sugar", price: "150" },
       { name: "Salt", description: "1kg iodized salt", price: "30" },
@@ -103,19 +111,22 @@ function Cards(props) {
         {prod.map((product, index) => (
           <div
             key={index}
-            className="border border-slate-400 p-5 rounded-lg flex flex-col gap-y-3 items-center w-56 hover:bg-gradient-to-r from-slate-400/40 via-slate-300/25 to-slate-400/40 shadow-2xl"
+            className="border border-slate-400  rounded-lg flex flex-col  items-center w-56 hover:bg-gradient-to-r from-slate-400/40 via-slate-300/25 to-slate-400/40 shadow-2xl"
           >
-            <h2 className="text-center">{product.name}</h2>
-            <p className="text-center">{product.description}</p>
-            <p className="text-center">Price: Rs.{product.price}</p>
-            <div className="mt-auto">
-              <button
-                className="bg-orange-500 p-1 px-4 rounded-lg text-white w-fit hover:bg-orange-500/85"
-                onClick={cartUpdating}
-              >
-                Order Now
-              </button>
-            </div>
+            <img src={product.image} alt="" className="h-48" />
+            <span className="flex flex-col items-center p-5 gap-y-2">
+              <h2 className="text-center">{product.name}</h2>
+              <p className="text-center">{product.description}</p>
+              <p className="text-center">Price: Rs.{product.price}</p>
+              <div className="mt-auto">
+                <button
+                  className="bg-orange-500 p-1 px-4 rounded-lg text-white w-fit hover:bg-orange-500/85"
+                  onClick={cartUpdating}
+                >
+                  Order Now
+                </button>
+              </div>
+            </span>
           </div>
         ))}
       </div>

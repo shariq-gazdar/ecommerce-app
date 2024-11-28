@@ -1,27 +1,51 @@
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Navbar from "./components/Navbar";
+import AddToCart from "./components/AddToCart";
 import Cards from "./components/Cards";
-import Signup from "./components/Signup"; // Import your Signup component
+import Signup from "./components/Signup";
 import { useState } from "react";
 import Hero from "./assets/HeroBanner.png";
+import Login from "./components/Login";
 
 function App() {
   const [cart, setCart] = useState(0);
   const [user, setUser] = useState(false);
-  const users = [];
-
+  const [login, setLogin] = useState(false);
+  const [currentUser, setCurrentUser] = useState("");
   return (
-    <div className="bg-gradient-to-b from-slate-300 to-slate-300 text-black">
-      {user ? (
-        <Signup users={users} setUser={setUser} />
-      ) : (
-        <>
-          <Navbar cart={cart} />
-          <img src={Hero} alt="Hero Banner" className="bg-black" />
-          <Cards setCart={setCart} cart={cart} />
-        </>
-      )}
-    </div>
+    <Router>
+      <div className="bg-gradient-to-b from-slate-300 to-slate-300 text-black">
+        <Routes>
+          <Route path="/signup" element={<Signup setUser={setUser} />} />
+          <Route path="/cart" element={<AddToCart />} />
+          <Route
+            path="/login"
+            element={
+              <Login setLogin={setLogin} setCurrentUser={setCurrentUser} />
+            }
+          />
+          {login ? (
+            <Route
+              path="/"
+              element={
+                <>
+                  <Navbar cart={cart} user={currentUser} />
+                  <img src={Hero} alt="Hero Banner" className="bg-black" />
+                  <Cards setCart={setCart} cart={cart} />
+                </>
+              }
+            />
+          ) : (
+            <Route path="*" element={<Navigate to="/signup" replace />} />
+          )}
+        </Routes>
+      </div>
+    </Router>
   );
 }
-
 export default App;

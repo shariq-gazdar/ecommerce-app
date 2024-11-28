@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Correct import
+import { Link } from "react-router-dom";
 
 function Signup(props) {
-  const [passMatch, setPassMatch] = useState(false);
+  const navigate = useNavigate(); // Initialize navigate function
 
+  // Function to check if passwords match
   const checkPass = () => {
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
@@ -11,19 +14,26 @@ function Signup(props) {
       statusLine.classList.remove("invisible", "text-red-500");
       statusLine.classList.add("text-green-500");
       statusLine.innerText = "Passwords match";
-      setPassMatch(true);
+      return true;
     } else {
       statusLine.classList.remove("invisible", "text-green-500");
       statusLine.classList.add("text-red-500");
       statusLine.innerText = "Passwords do not match";
-      setPassMatch(false);
+      return false;
     }
+  };
+
+  // Function to check if the email is already used
+  const alreadyUserCheck = () => {
+    let inpEmail = document.getElementById("email").value;
+    const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
+    return existingUsers.some((user) => user.email === inpEmail);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    checkPass();
-    if (passMatch) {
+    let emailStatus = document.getElementById("emailStatus");
+    if (checkPass() && !alreadyUserCheck()) {
       const currentUser = {
         name: document.getElementById("name").value,
         email: document.getElementById("email").value,
@@ -33,8 +43,16 @@ function Signup(props) {
       existingUsers.push(currentUser);
       localStorage.setItem("users", JSON.stringify(existingUsers));
       console.log("User added successfully:", currentUser);
+
+      navigate("/login");
     } else {
-      console.log("Passwords do not match. Fix the issue before submitting.");
+      console.log(
+        "Passwords do not match or email is already in use. Fix the issue before submitting."
+      );
+      statusLine.classList.remove("invisible");
+      statusLine.classList.add("text-red-500");
+      statusLine.innerText =
+        "Email is already in use. Fix the issue before submitting.";
     }
   };
 
@@ -78,6 +96,15 @@ function Signup(props) {
           />
           <h1 id="statusLine" className="text-center py-2 invisible">
             Status Line
+          </h1>
+          <h1 id="emailStatus" className="text-center invisible">
+            Email Status
+          </h1>
+          <h1 className="text-center pb-1">
+            Already Have An Account?{" "}
+            <span className="text-green-400 ">
+              <Link to="/login"> Login</Link>
+            </span>
           </h1>
           <button
             type="submit"

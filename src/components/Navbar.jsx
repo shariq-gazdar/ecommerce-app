@@ -31,7 +31,7 @@ function Navbar(props) {
 
           <div className="flex items-center space-x-4">
             <button className="hidden md:block hover:underline">
-              Sign in / Register
+              {props.user}
             </button>
             <button className="hidden md:block hover:underline">
               Orders & Account
