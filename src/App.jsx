@@ -22,7 +22,7 @@ function App() {
       <div className="bg-gradient-to-b from-slate-300 to-slate-300 text-black">
         <Routes>
           <Route path="/signup" element={<Signup setUser={setUser} />} />
-          <Route path="/cart" element={<AddToCart />} />
+          <Route path="/cart" element={<AddToCart user={currentUser} />} />
           <Route
             path="/login"
             element={
