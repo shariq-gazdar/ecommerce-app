@@ -34,9 +34,9 @@ function App() {
               path="/"
               element={
                 <>
-                  <Navbar cart={cart} user={currentUser} />
+                  <Navbar user={currentUser} />
                   <img src={Hero} alt="Hero Banner" className="bg-black" />
-                  <Cards setCart={setCart} cart={cart} />
+                  <Cards setCart={setCart} cart={cart} user={currentUser} />
                 </>
               }
             />

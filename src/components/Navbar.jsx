@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 function Navbar(props) {
+  let cartItems = JSON.parse(localStorage.getItem(props.user)) || [];
+  let cartNumber = cartItems.length;
+
   return (
     <div>
       <nav className="bg-[#1a0000] text-white">
@@ -43,7 +46,7 @@ function Navbar(props) {
               <button className="relative">
                 🛒
                 <span className="absolute top-0 right-0 text-xs bg-red-600 text-white rounded-full px-1">
-                  {props.cart}
+                  {cartNumber}
                 </span>
               </button>
             </Link>

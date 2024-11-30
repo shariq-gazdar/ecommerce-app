@@ -221,10 +221,7 @@ function Cards(props) {
   }, []);
 
   const addToCart = (e) => {
-    // Access the parent element containing the product details
     let targetElement = e.target.parentElement.parentElement;
-
-    // Extract product details (name, description, price)
     let productName = targetElement.querySelector("h2").innerText;
     let productDescription = targetElement.querySelector("p").innerText;
     let productPrice =
@@ -234,9 +231,9 @@ function Cards(props) {
       description: productDescription,
       price: productPrice,
     };
-    let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+    let cartItems = JSON.parse(localStorage.getItem(props.user)) || [];
     cartItems.push(product);
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    localStorage.setItem(props.user, JSON.stringify(cartItems));
   };
 
   const cartUpdating = (e) => {
@@ -251,32 +248,6 @@ function Cards(props) {
   return (
     <>
       <Notify notify={notify} />
-<<<<<<< HEAD
-      <div className="flex justify-center m-10 gap-5  flex-wrap h-full pb-10  ">
-        <div className="flex justify-center m-10 gap-5 flex-wrap h-full pb-10">
-          {prod.map((product, index) => (
-            <div
-              key={index}
-              className="border border-slate-400 rounded-lg flex flex-col items-center w-56 hover:bg-gradient-to-r from-slate-400/40 via-slate-300/25 to-slate-400/40 shadow-2xl"
-            >
-              <img src={product.image} alt="" className="h-48" />
-              <span className="flex flex-col items-center p-5 gap-y-2">
-                <h2 className="text-center">{product.name}</h2>
-                <p className="text-center">{product.description}</p>
-                <p className="text-center">Price: Rs.{product.price}</p>
-                <div className="mt-auto flex justify-center w-full">
-                  <button
-                    className="bg-orange-500 p-1 px-4 rounded-lg text-white w-fit hover:bg-orange-500/85"
-                    onClick={cartUpdating}
-                  >
-                    Order Now
-                  </button>
-                </div>
-              </span>
-            </div>
-          ))}
-        </div>
-=======
       <div className="flex justify-center m-10 gap-5   h-full pb-10  flex-wrap ">
         {prod.map((product, index) => (
           <div
@@ -303,7 +274,6 @@ function Cards(props) {
             </span>
           </div>
         ))}
->>>>>>> 7e642b022beac18672ceb8450b9ae195f58817fd
       </div>
     </>
   );
