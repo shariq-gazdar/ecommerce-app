@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Navbar(props) {
   return (
@@ -38,12 +39,14 @@ function Navbar(props) {
             </button>
             <button className="hover:underline">Support</button>
             <div className="text-sm bg-green-600 px-2 py-1 rounded">EN</div>
-            <button className="relative">
-              🛒
-              <span className="absolute top-0 right-0 text-xs bg-red-600 text-white rounded-full px-1">
-                {props.cart}
-              </span>
-            </button>
+            <Link to="/cart">
+              <button className="relative">
+                🛒
+                <span className="absolute top-0 right-0 text-xs bg-red-600 text-white rounded-full px-1">
+                  {props.cart}
+                </span>
+              </button>
+            </Link>
           </div>
         </div>
       </nav>
