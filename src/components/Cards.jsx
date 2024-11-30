@@ -108,27 +108,29 @@ function Cards(props) {
     <>
       <Notify notify={notify} />
       <div className="flex justify-center m-10 gap-5  flex-wrap h-full pb-10  ">
-        {prod.map((product, index) => (
-          <div
-            key={index}
-            className="border border-slate-400  rounded-lg flex flex-col  items-center w-56 hover:bg-gradient-to-r from-slate-400/40 via-slate-300/25 to-slate-400/40 shadow-2xl"
-          >
-            <img src={product.image} alt="" className="h-48" />
-            <span className="flex flex-col items-center p-5 gap-y-2">
-              <h2 className="text-center">{product.name}</h2>
-              <p className="text-center">{product.description}</p>
-              <p className="text-center">Price: Rs.{product.price}</p>
-              <div className="mt-auto">
-                <button
-                  className="bg-orange-500 p-1 px-4 rounded-lg text-white w-fit hover:bg-orange-500/85"
-                  onClick={cartUpdating}
-                >
-                  Order Now
-                </button>
-              </div>
-            </span>
-          </div>
-        ))}
+        <div className="flex justify-center m-10 gap-5 flex-wrap h-full pb-10">
+          {prod.map((product, index) => (
+            <div
+              key={index}
+              className="border border-slate-400 rounded-lg flex flex-col items-center w-56 hover:bg-gradient-to-r from-slate-400/40 via-slate-300/25 to-slate-400/40 shadow-2xl"
+            >
+              <img src={product.image} alt="" className="h-48" />
+              <span className="flex flex-col items-center p-5 gap-y-2">
+                <h2 className="text-center">{product.name}</h2>
+                <p className="text-center">{product.description}</p>
+                <p className="text-center">Price: Rs.{product.price}</p>
+                <div className="mt-auto flex justify-center w-full">
+                  <button
+                    className="bg-orange-500 p-1 px-4 rounded-lg text-white w-fit hover:bg-orange-500/85"
+                    onClick={cartUpdating}
+                  >
+                    Order Now
+                  </button>
+                </div>
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );
