@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Home from "../assets/home.svg";
 import { Link } from "react-router-dom";
 
@@ -7,9 +7,28 @@ function AddToCart(props) {
   let cartItems = JSON.parse(localStorage.getItem(props.user)) || [];
   const user = props.user;
   let price = [];
+  let total;
+  const [check, setCheck] = useState(false);
+  const numFy = (num) => {
+    let numOnly = num.replace(/[^\d]/g, "");
+    return Number(numOnly);
+  };
   cartItems.forEach((cartItem) => {
-    price = cartItem.price;
+    let num = numFy(cartItem.price);
+    price.push(num);
+    if (price.length > 0) {
+      total = price.reduce((a, b) => a + b, 0);
+    }
   });
+
+  const checkOut = () => {
+    let checkOutBox = document.querySelector("#checkOut");
+    if (check) {
+      checkOutBox.classList.remove("invisible");
+      checkOutBox.classList.add("visible");
+      setCheck(!check);
+    }
+  };
 
   return (
     <div>
@@ -35,7 +54,28 @@ function AddToCart(props) {
           <h2 className="text-center text-gray-500">Your cart is empty!</h2>
         )}
       </div>
-      <h1 className="text-center font-bold">Total Price :{price[5]}</h1>
+      <h1 className="text-center font-bold">
+        Total Price :Rs .<span className="text-red-600">{total}</span>
+      </h1>
+
+      <div className=" text-center w-fit bg-green-400 mx-auto p-2 rounded-xl cursor-pointer hover:bg-green-500 ">
+        Checkout
+        <span className="ml-2 text-sm font-medium text-gray-700">
+          ({cartItems.length} items)
+        </span>
+      </div>
+      <div
+        id="checkOut"
+        className="fixed top-10 w-full flex justify-center invisible"
+        onClick={checkOut}
+      >
+        <span className="flex flex-col justify-center items-center border border-black p-4 w-fit bg-green-800">
+          <h1>Proceed To Checkout</h1>
+          <h1>{cartItems.length} Items</h1>
+          <h2>{total}</h2>
+          <button>Done</button>
+        </span>
+      </div>
     </div>
   );
 }

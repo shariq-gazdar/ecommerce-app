@@ -19,7 +19,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState("");
   return (
     <Router>
-      <div className="bg-gradient-to-b from-slate-300 to-slate-300 text-black">
+      <div className="bg-gradient-to-b from-white to-white text-black">
         <Routes>
           <Route path="/signup" element={<Signup setUser={setUser} />} />
           <Route path="/cart" element={<AddToCart user={currentUser} />} />
