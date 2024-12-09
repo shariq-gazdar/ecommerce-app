@@ -11,7 +11,7 @@ function Navbar(props) {
         <div className="container mx-auto flex items-center justify-between px-4 py-2">
           {/* Left Logo Section */}
           <div className="flex items-center">
-            <div className="bg-orange-500 text-white text-sm font-bold px-3 py-1 rounded-full mr-4">
+            <div className="bg-orange-500 text-white text-sm font-bold px-3 py-1 rounded-full mr-4 text-center">
               SG Store
             </div>
             <ul className="hidden md:flex items-center space-x-6">
@@ -34,9 +34,11 @@ function Navbar(props) {
           </div>
 
           <div className="flex items-center space-x-4">
-            <button className="hidden md:block hover:underline">
-              {props.user}
-            </button>
+            <Link to="/profile">
+              <button className="hidden md:block hover:underline">
+                {props.user}
+              </button>
+            </Link>
             <button className="hidden md:block hover:underline">
               Orders & Account
             </button>

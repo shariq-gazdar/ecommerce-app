@@ -11,11 +11,9 @@ function Login(props) {
     let inpEmail = document.getElementById("email").value;
     let inpPass = document.getElementById("password").value;
     let statusLine = document.getElementById("statusLine");
-
     const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
     let userFound = false;
 
-    // Check each user to see if email and password match
     existingUsers.forEach((user) => {
       if (user.email === inpEmail && user.password === inpPass) {
         userFound = true;
@@ -25,11 +23,13 @@ function Login(props) {
         statusLine.classList.add("text-green-500");
         statusLine.innerText = "Login Success";
         navigate("/");
-        props.setCurrentUser(inpEmail);
+        localStorage.setItem("loginState", true);
+        sessionStorage.setItem("currentUser", inpEmail);
+        let currentUser = sessionStorage.getItem("currentUser");
+        props.setCurrentUser(currentUser);
       }
     });
 
-    // If no match is found
     if (!userFound) {
       setLoginMatch(false);
       props.setLogin(false);

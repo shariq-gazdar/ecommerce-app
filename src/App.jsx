@@ -8,28 +8,46 @@ import Navbar from "./components/Navbar";
 import AddToCart from "./components/AddToCart";
 import Cards from "./components/Cards";
 import Signup from "./components/Signup";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Hero from "./assets/HeroBanner.png";
 import Login from "./components/Login";
+import Profile from "./components/Profile";
 
 function App() {
-  const [cart, setCart] = useState(0);
   const [user, setUser] = useState(false);
-  const [login, setLogin] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
+  let sessionUser = sessionStorage.getItem("currentUser");
+  useEffect(() => {
+    if (sessionUser) {
+      setUser(true);
+      setCurrentUser(sessionUser);
+    }
+  }, [sessionUser]);
+  const [cart, setCart] = useState(0);
+  const [login, setLogin] = useState(false);
+  const [cartPrice, setCartPrice] = useState(0);
+  let loginState = localStorage.getItem("loginState");
+  console.log(loginState);
+
   return (
     <Router>
       <div className="bg-gradient-to-b from-white to-white text-black">
         <Routes>
           <Route path="/signup" element={<Signup setUser={setUser} />} />
-          <Route path="/cart" element={<AddToCart user={currentUser} />} />
+          <Route
+            path="/cart"
+            element={
+              <AddToCart user={currentUser} setCartPrice={setCartPrice} />
+            }
+          />
+          <Route path="/profile" element={<Profile user={currentUser} />} />
           <Route
             path="/login"
             element={
               <Login setLogin={setLogin} setCurrentUser={setCurrentUser} />
             }
           />
-          {login ? (
+          {loginState ? (
             <Route
               path="/"
               element={
