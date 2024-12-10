@@ -248,32 +248,32 @@ function Cards(props) {
   return (
     <>
       <Notify notify={notify} />
-      <div className="flex justify-center m-10 gap-5   h-full pb-10  flex-wrap ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-8 bg-gray-50">
         {prod.map((product, index) => (
           <div
             key={index}
-            className="border border-slate-400  rounded-lg flex flex-col  items-center w-56 hover:bg-gradient-to-r from-slate-400/40 via-slate-300/25 to-slate-400/40 shadow-2xl"
+            className="bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200"
           >
             <img
               src={product.image}
-              alt=""
-              className="h-60 object-contain bg-white w-full rounded-2xl border-b-2"
+              alt={product.name}
+              className="h-60 w-full object-cover rounded-t-lg"
             />
-            <span className="flex flex-col items-center p-5 gap-y-2">
-              <h2 className="text-left">{product.name}</h2>
-              <p className="text-left">{product.description}</p>
-              <p className="text-left font-bold text-base">
+            <div className="p-5 space-y-3">
+              <h2 className="text-lg font-semibold text-gray-800">
+                {product.name}
+              </h2>
+              <p className="text-sm text-gray-600">{product.description}</p>
+              <p className="text-lg font-bold text-gray-900">
                 Rs.{product.price}
               </p>
-              <div className="mt-auto">
-                <button
-                  className="bg-orange-500 p-1 px-4 rounded-lg text-white w-fit hover:bg-orange-500/85 border border-black font-semibold"
-                  onClick={cartUpdating}
-                >
-                  Order Now
-                </button>
-              </div>
-            </span>
+              <button
+                className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600 font-semibold"
+                onClick={cartUpdating}
+              >
+                Order Now
+              </button>
+            </div>
           </div>
         ))}
       </div>

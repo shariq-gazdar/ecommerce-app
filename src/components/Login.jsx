@@ -23,7 +23,7 @@ function Login(props) {
         statusLine.classList.add("text-green-500");
         statusLine.innerText = "Login Success";
         navigate("/");
-        localStorage.setItem("loginState", true);
+        sessionStorage.setItem("loginState", true);
         sessionStorage.setItem("currentUser", inpEmail);
         let currentUser = sessionStorage.getItem("currentUser");
         props.setCurrentUser(currentUser);

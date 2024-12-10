@@ -26,7 +26,7 @@ function App() {
   const [cart, setCart] = useState(0);
   const [login, setLogin] = useState(false);
   const [cartPrice, setCartPrice] = useState(0);
-  let loginState = localStorage.getItem("loginState");
+  let loginState = sessionStorage.getItem("loginState");
   console.log(loginState);
 
   return (
