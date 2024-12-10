@@ -257,12 +257,14 @@ function Cards(props) {
             <img
               src={product.image}
               alt=""
-              className="h-60 object-contain bg-white w-full rounded-2xl"
+              className="h-60 object-contain bg-white w-full rounded-2xl border-b-2"
             />
             <span className="flex flex-col items-center p-5 gap-y-2">
-              <h2 className="text-center">{product.name}</h2>
-              <p className="text-center">{product.description}</p>
-              <p className="text-center">Price: Rs.{product.price}</p>
+              <h2 className="text-left">{product.name}</h2>
+              <p className="text-left">{product.description}</p>
+              <p className="text-left font-bold text-base">
+                Rs.{product.price}
+              </p>
               <div className="mt-auto">
                 <button
                   className="bg-orange-500 p-1 px-4 rounded-lg text-white w-fit hover:bg-orange-500/85 border border-black font-semibold"
