@@ -1,9 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Navbar(props) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to toggle the menu visibility
   let cartItems = JSON.parse(localStorage.getItem(props.user)) || [];
   let cartNumber = cartItems.length;
+
+  // Toggle menu visibility
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <div>
@@ -20,6 +26,7 @@ function Navbar(props) {
             </ul>
           </div>
 
+          {/* Search bar */}
           <div className="flex-grow mx-4">
             <div className="relative">
               <input
@@ -33,17 +40,31 @@ function Navbar(props) {
             </div>
           </div>
 
+          {/* Desktop and Mobile Navigation */}
           <div className="flex items-center space-x-4">
+            {/* Hamburger Icon for Mobile */}
+            <button
+              className="md:hidden text-white"
+              onClick={toggleMenu} // Toggle menu on click
+            >
+              ☰
+            </button>
+
+            {/* Profile Button */}
             <Link to="/profile">
               <button className="hidden md:block hover:underline">
                 {props.user}
               </button>
             </Link>
+
+            {/* Other Desktop Links */}
             <button className="hidden md:block hover:underline">
               Orders & Account
             </button>
             <button className="hover:underline">Support</button>
             <div className="text-sm bg-green-600 px-2 py-1 rounded">EN</div>
+
+            {/* Cart Button */}
             <Link to="/cart">
               <button className="relative">
                 🛒
@@ -54,6 +75,26 @@ function Navbar(props) {
             </Link>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-[#1a0000] text-white p-4 space-y-4">
+            <ul>
+              <li className="hover:underline cursor-pointer">Best Sellers</li>
+              <li className="hover:underline cursor-pointer">New Arrivals</li>
+              <li>
+                <Link to="/profile" className="hover:underline">
+                  {props.user}
+                </Link>
+              </li>
+              <li className="hover:underline cursor-pointer">
+                Orders & Account
+              </li>
+              <li className="hover:underline cursor-pointer">Support</li>
+              <li className="hover:underline cursor-pointer">Cart</li>
+            </ul>
+          </div>
+        )}
       </nav>
     </div>
   );

@@ -53,7 +53,11 @@ function App() {
               element={
                 <>
                   <Navbar user={currentUser} />
-                  <img src={Hero} alt="Hero Banner" className="bg-black" />
+                  <img
+                    src={Hero}
+                    alt="Hero Banner"
+                    className="bg-black h-52 object-cover lg:object-contain lg:h-full"
+                  />
                   <Cards setCart={setCart} cart={cart} user={currentUser} />
                 </>
               }
