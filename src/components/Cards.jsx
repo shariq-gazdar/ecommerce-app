@@ -257,7 +257,7 @@ function Cards(props) {
             <img
               src={product.image}
               alt=""
-              className="h-60 object-contain bg-black/50 w-full"
+              className="h-60 object-contain bg-white w-full rounded-2xl"
             />
             <span className="flex flex-col items-center p-5 gap-y-2">
               <h2 className="text-center">{product.name}</h2>
