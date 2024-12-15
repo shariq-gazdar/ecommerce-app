@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Navbar(props) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to toggle the menu visibility
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   let cartItems = JSON.parse(localStorage.getItem(props.user)) || [];
   let cartNumber = cartItems.length;
 
@@ -56,12 +56,9 @@ function Navbar(props) {
                 {props.user}
               </button>
             </Link>
-
-            {/* Other Desktop Links */}
-            <button className="hidden md:block hover:underline">
-              Orders & Account
-            </button>
-            <button className="hover:underline">Support</button>
+            <Link to="/support">
+              <button className="hover:underline">Support</button>
+            </Link>
             <div className="text-sm bg-green-600 px-2 py-1 rounded">EN</div>
 
             {/* Cart Button */}

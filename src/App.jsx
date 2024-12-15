@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import Hero from "./assets/HeroBanner.png";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
+import Support from "./components/Support";
 
 function App() {
   const [user, setUser] = useState(false);
@@ -41,6 +42,7 @@ function App() {
             }
           />
           <Route path="/profile" element={<Profile user={currentUser} />} />
+          <Route path="/support" element={<Support />} />
           <Route
             path="/login"
             element={

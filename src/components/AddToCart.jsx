@@ -3,12 +3,13 @@ import Home from "../assets/home.svg";
 import { Link } from "react-router-dom";
 
 function AddToCart({ user }) {
-  const [cartItems, setCartItems] = useState(
-    JSON.parse(localStorage.getItem(user)) || []
-  );
+  const [checkoutVisible, setCheckoutVisible] = useState(false);
+  const [cartItems, setCartItems] = useState(() => {
+    const storedItems = localStorage.getItem(user);
+    return storedItems ? JSON.parse(storedItems) : [];
+  });
 
   const numFy = (num) => Number(num.replace(/[^\d]/g, ""));
-
   const total = cartItems.reduce((acc, item) => acc + numFy(item.price), 0);
 
   const removeItem = (index) => {
@@ -18,9 +19,40 @@ function AddToCart({ user }) {
     localStorage.setItem(user, JSON.stringify(updatedCartItems));
   };
 
+  const handleCheckoutConfirm = () => {
+    // Clear the cart
+    setCartItems([]);
+    localStorage.removeItem(user);
+    setCheckoutVisible(false);
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-6">
-      {/* Header */}
+      {checkoutVisible && (
+        <div className="checkOut absolute w-screen h-[95vh] flex items-center justify-center bg-black/50">
+          <div className="bg-gray-100 font-bold px-10 py-5 rounded-lg">
+            <h1>Confirm Checkout</h1>
+            <h1 className="text-center">
+              Total Bill: <span className="text-red-600">Rs.{total}</span>
+            </h1>
+            <div className="flex justify-center gap-x-5 py-2">
+              <button
+                className="bg-green-500 text-white p-2 rounded-lg"
+                onClick={handleCheckoutConfirm}
+              >
+                Yes
+              </button>
+              <button
+                className="bg-red-600 text-white p-2 rounded-lg"
+                onClick={() => setCheckoutVisible(false)}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center justify-between w-full max-w-4xl px-6 mb-6">
         <h1 className="text-2xl font-bold text-gray-800">{user}'s Cart</h1>
         <Link to="/">
@@ -28,7 +60,6 @@ function AddToCart({ user }) {
         </Link>
       </div>
 
-      {/* Cart Items */}
       <div className="w-full max-w-4xl p-4 bg-white shadow-md rounded-lg">
         {cartItems.length > 0 ? (
           cartItems.map((cartItem, index) => (
@@ -60,7 +91,6 @@ function AddToCart({ user }) {
         )}
       </div>
 
-      {/* Total Price */}
       <div className="mt-6 w-full max-w-4xl flex justify-between items-center px-4">
         <h1 className="text-lg font-bold text-gray-800">
           Total Price: <span className="text-red-600">Rs.{total}</span>
@@ -70,6 +100,7 @@ function AddToCart({ user }) {
             cartItems.length === 0 ? "opacity-50 cursor-not-allowed" : ""
           }`}
           disabled={cartItems.length === 0}
+          onClick={() => setCheckoutVisible(true)}
         >
           Checkout ({cartItems.length} items)
         </button>
