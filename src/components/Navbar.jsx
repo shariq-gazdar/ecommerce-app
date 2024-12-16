@@ -87,8 +87,6 @@ function Navbar(props) {
               <li className="hover:underline cursor-pointer">
                 Orders & Account
               </li>
-              <li className="hover:underline cursor-pointer">Support</li>
-              <li className="hover:underline cursor-pointer">Cart</li>
             </ul>
           </div>
         )}

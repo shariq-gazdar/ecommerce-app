@@ -20,16 +20,16 @@ function AddToCart({ user }) {
   };
 
   const handleCheckoutConfirm = () => {
-    // Clear the cart
     setCartItems([]);
     localStorage.removeItem(user);
     setCheckoutVisible(false);
+    alert("Check out completed!");
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-6">
+    <div className="min-h-svh bg-gray-100 flex flex-col items-center py-6">
       {checkoutVisible && (
-        <div className="checkOut absolute w-screen h-[95vh] flex items-center justify-center bg-black/50">
+        <div className="checkOut fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black/50 z-50">
           <div className="bg-gray-100 font-bold px-10 py-5 rounded-lg">
             <h1>Confirm Checkout</h1>
             <h1 className="text-center">
