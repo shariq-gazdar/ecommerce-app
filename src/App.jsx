@@ -13,6 +13,7 @@ import Hero from "./assets/HeroBanner.png";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
 import Support from "./components/Support";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   const [user, setUser] = useState(false);
@@ -35,6 +36,7 @@ function App() {
       <div className="bg-gradient-to-b from-white to-white text-black">
         <Routes>
           <Route path="/signup" element={<Signup setUser={setUser} />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route
             path="/cart"
             element={

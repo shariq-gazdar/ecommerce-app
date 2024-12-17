@@ -4,7 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 function Login(props) {
   const [loginMatch, setLoginMatch] = useState(false);
   const navigate = useNavigate(); // Using useNavigate hook
-
+  const adminEmail = "admin@gmail.com";
+  const adminPass = "admin";
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -27,6 +28,8 @@ function Login(props) {
         sessionStorage.setItem("currentUser", inpEmail);
         let currentUser = sessionStorage.getItem("currentUser");
         props.setCurrentUser(currentUser);
+      } else if (adminEmail === inpEmail && adminPass == inpPass) {
+        navigate("/dashboard");
       }
     });
 
