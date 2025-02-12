@@ -1,44 +1,76 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Home from "../assets/home.svg";
 import { Link } from "react-router-dom";
 
 function AddToCart({ user }) {
   const [checkoutVisible, setCheckoutVisible] = useState(false);
-  const [cartItems, setCartItems] = useState(() => {
-    const storedItems = localStorage.getItem(user);
-    return storedItems ? JSON.parse(storedItems) : [];
-  });
+  const [cartItems, setCartItems] = useState([]);
 
-  const numFy = (num) => Number(num.replace(/[^\d]/g, ""));
+  // Load cart from localStorage when component mounts
+  useEffect(() => {
+    const storedItems = JSON.parse(localStorage.getItem(user)) || [];
+    setCartItems(storedItems);
+  }, [user]);
+
+  // Converts price strings like "Rs.1,299.50" to a number
+  const numFy = (num) => parseFloat(num.replace(/[^0-9.]/g, "")) || 0;
+
+  // Calculate total price
   const total = cartItems.reduce(
     (acc, item) => acc + numFy(item.price) * item.quantity,
     0
   );
 
+  // Remove item from cart
   const removeItem = (index) => {
-    const updatedCartItems = [...cartItems];
-    if (updatedCartItems[index].quantity > 1) {
-      updatedCartItems[index].quantity -= 1;
-    } else {
-      updatedCartItems.splice(index, 1);
-    }
-    setCartItems(updatedCartItems);
-    localStorage.setItem(user, JSON.stringify(updatedCartItems));
+    setCartItems((prevItems) => {
+      const updatedCartItems = [...prevItems];
+
+      if (updatedCartItems[index].quantity > 1) {
+        updatedCartItems[index].quantity -= 1;
+      } else {
+        updatedCartItems.splice(index, 1);
+      }
+
+      // Update localStorage after state updates
+      localStorage.setItem(user, JSON.stringify(updatedCartItems));
+
+      return updatedCartItems;
+    });
   };
 
+  // Confirm checkout
   const handleCheckoutConfirm = () => {
-    localStorage.setItem("orders", JSON.stringify(cartItems));
+    // Retrieve existing orders for the user
+    const existingOrders =
+      JSON.parse(localStorage.getItem(`orders_${user}`)) || [];
+
+    // Append new order
+    const updatedOrders = [
+      ...existingOrders,
+      { cartItems, date: new Date().toISOString() },
+    ];
+
+    // Save back to localStorage
+    localStorage.setItem(`orders_${user}`, JSON.stringify(updatedOrders));
+
+    console.log("Order Placed:", updatedOrders);
+
+    // Clear cart after checkout
+    setCartItems([]);
+    localStorage.removeItem(user);
     setCheckoutVisible(false);
   };
 
   return (
     <div className="min-h-svh bg-gray-100 flex flex-col items-center py-6">
+      {/* Checkout Confirmation Modal */}
       {checkoutVisible && (
-        <div className="checkOut fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black/50 z-50">
-          <div className="bg-gray-100 font-bold px-10 py-5 rounded-lg">
-            <h1>Confirm Checkout</h1>
-            <h1 className="text-center">
-              Total Bill: <span className="text-red-600">Rs.{total}</span>
+        <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-gray-100 font-bold px-10 py-5 rounded-lg shadow-lg">
+            <h1 className="text-lg">Confirm Checkout</h1>
+            <h1 className="text-center text-red-600">
+              Total Bill: Rs.{total.toFixed(2)}
             </h1>
             <div className="flex justify-center gap-x-5 py-2">
               <button
@@ -58,6 +90,7 @@ function AddToCart({ user }) {
         </div>
       )}
 
+      {/* Cart Header */}
       <div className="flex items-center justify-between w-full max-w-4xl px-6 mb-6">
         <h1 className="text-2xl font-bold text-gray-800">{user}'s Cart</h1>
         <Link to="/">
@@ -65,6 +98,7 @@ function AddToCart({ user }) {
         </Link>
       </div>
 
+      {/* Cart Items */}
       <div className="w-full max-w-4xl p-4 bg-white shadow-md rounded-lg">
         {cartItems.length > 0 ? (
           cartItems.map((cartItem, index) => (
@@ -96,9 +130,11 @@ function AddToCart({ user }) {
         )}
       </div>
 
+      {/* Checkout Button */}
       <div className="mt-6 w-full max-w-4xl flex justify-between items-center px-4">
         <h1 className="text-lg font-bold text-gray-800">
-          Total Price: <span className="text-red-600">Rs.{total}</span>
+          Total Price:{" "}
+          <span className="text-red-600">Rs.{total.toFixed(2)}</span>
         </h1>
         <button
           className={`bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition ${

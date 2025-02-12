@@ -1,119 +1,147 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import Exit from "../assets/exit.svg";
-
-function Dashboard() {
-  const [allUsers, setAllUsers] = useState([]);
-  const [user, setUser] = useState(true);
-  const [order, setOrder] = useState(false);
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import exit from "../assets/exit.svg";
+const AdminDashboard = () => {
+  const [users, setUsers] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
-  const [cartItems, setCartItems] = useState(() => {
-    const storedItems = localStorage.getItem("cartItems");
-    return storedItems ? JSON.parse(storedItems) : [];
-  });
-
-  // Fetch users from localStorage
-  const getLocalStorage = () => {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    setAllUsers(users);
-    console.log("Loaded users:", users);
-  };
-
-  // Remove an item from the users list
-  const removeItem = (index) => {
-    const updatedUsers = [...allUsers];
-    updatedUsers.splice(index, 1);
-    setAllUsers(updatedUsers);
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-  };
-  const localOrder = () => {
-    const someOrder = localStorage.getItem("orders") || [];
-    setOrderItems(someOrder);
-    console.log(orderItems);
-  };
-
-  // Fetch data when the component mounts
+  const navigate = useNavigate();
   useEffect(() => {
-    getLocalStorage();
+    fetchUsers();
+    fetchOrders();
   }, []);
 
-  useEffect(() => {
-    localOrder();
-  });
+  // Function to fetch users from localStorage
+  const fetchUsers = () => {
+    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+    setUsers(storedUsers);
+  };
+
+  // Function to fetch orders from localStorage
+  const fetchOrders = () => {
+    let ordersMap = new Map();
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith("orders_")) {
+        const email = key.replace("orders_", "");
+        const userOrders = JSON.parse(localStorage.getItem(key)) || [];
+
+        if (!ordersMap.has(email)) {
+          ordersMap.set(email, []);
+        }
+
+        userOrders.forEach((order) => {
+          ordersMap.get(email).push(order);
+        });
+      }
+    }
+
+    setOrderItems(Array.from(ordersMap.entries()));
+  };
+
+  // Function to delete a specific user
+  const deleteUser = (email) => {
+    const updatedUsers = users.filter((user) => user.email !== email);
+    localStorage.setItem("users", JSON.stringify(updatedUsers)); // Update users in localStorage
+    localStorage.removeItem(`orders_${email}`); // Remove orders of the deleted user
+    fetchUsers();
+    fetchOrders();
+  };
+
+  // Function to delete a specific order
+  const deleteOrder = (email, orderIndex) => {
+    const key = `orders_${email}`;
+    const userOrders = JSON.parse(localStorage.getItem(key)) || [];
+
+    userOrders.splice(orderIndex, 1); // Remove the selected order
+
+    if (userOrders.length > 0) {
+      localStorage.setItem(key, JSON.stringify(userOrders)); // Update storage
+    } else {
+      localStorage.removeItem(key); // Remove user if no orders left
+    }
+
+    fetchOrders(); // Refresh UI
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-6">
-      {/* Header */}
-      <div className="w-full flex justify-between px-10 items-center">
-        <div className="flex flex-col">
-          <h1 className="text-4xl font-bold">Dashboard</h1>
-          <button
-            onClick={() => {
-              setUser(true);
-            }}
-          >
-            Users
-          </button>
-          <button
-            onClick={() => {
-              setUser(false);
-            }}
-          >
-            Orders
-          </button>
-        </div>
-        <Link to="/login">
-          <img
-            src={Exit}
-            alt="Exit"
-            className="cursor-pointer"
-            title="Logout"
-          />
-        </Link>
+    <div className="p-6">
+      <img
+        src={exit}
+        alt=""
+        className="float-right cursor-pointer"
+        onClick={() => {
+          navigate("/login");
+        }}
+      />
+      <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
+      {/* Users Section */}
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-4">Users</h2>
+        {users.length > 0 ? (
+          users.map((user, index) => (
+            <div
+              key={index}
+              className="border p-4 mb-2 rounded-lg flex justify-between items-center"
+            >
+              <div>
+                <p className="font-medium text-gray-700">{user.email}</p>
+                <p className="text-gray-500">Name: {user.name}</p>
+              </div>
+              <button
+                onClick={() => deleteUser(user.email)}
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              >
+                Delete User
+              </button>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500">No users found.</p>
+        )}
       </div>
 
-      {/* Users List */}
-      {user && (
-        <div className="flex flex-col gap-y-5 w-full max-w-2xl mt-6">
-          {allUsers.length > 0 ? (
-            allUsers.map((user, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between border rounded-lg border-gray-300 py-4 px-4"
-              >
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    {user.name}
-                  </h2>
-                  <p className="text-gray-600">{user.email}</p>
+      {/* Orders Section */}
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Orders</h2>
+        {orderItems.length > 0 ? (
+          orderItems.map(([email, orders], index) => (
+            <div key={index} className="border-b py-4">
+              <h2 className="text-lg font-semibold text-gray-800">
+                Order from: {email}
+              </h2>
+              {orders.map((order, orderIndex) => (
+                <div key={orderIndex} className="ml-4 border-b pb-2">
+                  <p className="text-gray-500 text-sm">
+                    Date: {new Date(order.date).toLocaleString()}
+                  </p>
+                  {order.cartItems.map((item, i) => (
+                    <div key={i} className="ml-4">
+                      <h3 className="text-gray-700">
+                        {item.name} (x{item.quantity})
+                      </h3>
+                      <p className="text-gray-600">
+                        Price: Rs.{item.price} each
+                      </p>
+                    </div>
+                  ))}
+                  {/* Delete Order Button */}
+                  <button
+                    onClick={() => deleteOrder(email, orderIndex)}
+                    className="mt-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                  >
+                    Delete Order
+                  </button>
                 </div>
-                <button
-                  className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition"
-                  onClick={() => removeItem(index)}
-                >
-                  Remove
-                </button>
-              </div>
-            ))
-          ) : (
-            <h2 className="text-center text-gray-500 py-10">No users found!</h2>
-          )}
-        </div>
-      )}
-      {order && (
-        <div>
-          {orderItems.map((orderItem) => {
-            <div key={orderItem.name}>
-              <h2>{orderItem.name}</h2>
-              <h3>{orderItem.price}</h3>
-              <p>{orderItem.description}</p>
-              <p>{orderItem.quantity}</p>
-              <hr />
-            </div>;
-          })}
-        </div>
-      )}
+              ))}
+            </div>
+          ))
+        ) : (
+          <h2 className="text-center text-gray-500 py-10">No orders found!</h2>
+        )}
+      </div>
     </div>
   );
-}
+};
 
-export default Dashboard;
+export default AdminDashboard;
