@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import exit from "../assets/exit.svg";
+
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
   const navigate = useNavigate();
+
   useEffect(() => {
     fetchUsers();
     fetchOrders();
@@ -42,8 +44,9 @@ const AdminDashboard = () => {
   // Function to delete a specific user
   const deleteUser = (email) => {
     const updatedUsers = users.filter((user) => user.email !== email);
-    localStorage.setItem("users", JSON.stringify(updatedUsers)); // Update users in localStorage
-    localStorage.removeItem(`orders_${email}`); // Remove orders of the deleted user
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    localStorage.removeItem(`orders_${email}`);
+    localStorage.removeItem(`user_${email}`); // Remove stored user details
     fetchUsers();
     fetchOrders();
   };
@@ -53,49 +56,58 @@ const AdminDashboard = () => {
     const key = `orders_${email}`;
     const userOrders = JSON.parse(localStorage.getItem(key)) || [];
 
-    userOrders.splice(orderIndex, 1); // Remove the selected order
+    userOrders.splice(orderIndex, 1);
 
     if (userOrders.length > 0) {
-      localStorage.setItem(key, JSON.stringify(userOrders)); // Update storage
+      localStorage.setItem(key, JSON.stringify(userOrders));
     } else {
-      localStorage.removeItem(key); // Remove user if no orders left
+      localStorage.removeItem(key);
     }
 
-    fetchOrders(); // Refresh UI
+    fetchOrders();
   };
 
   return (
     <div className="p-6">
       <img
         src={exit}
-        alt=""
+        alt="Exit"
         className="float-right cursor-pointer"
-        onClick={() => {
-          navigate("/login");
-        }}
+        onClick={() => navigate("/login")}
       />
       <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
+
       {/* Users Section */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Users</h2>
         {users.length > 0 ? (
-          users.map((user, index) => (
-            <div
-              key={index}
-              className="border p-4 mb-2 rounded-lg flex justify-between items-center"
-            >
-              <div>
-                <p className="font-medium text-gray-700">{user.email}</p>
-                <p className="text-gray-500">Name: {user.name}</p>
-              </div>
-              <button
-                onClick={() => deleteUser(user.email)}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+          users.map((user, index) => {
+            const userDetails =
+              JSON.parse(localStorage.getItem(`user_${user.email}`)) || {};
+            return (
+              <div
+                key={index}
+                className="border p-4 mb-2 rounded-lg flex justify-between items-center"
               >
-                Delete User
-              </button>
-            </div>
-          ))
+                <div>
+                  <p className="font-medium text-gray-700">{user.email}</p>
+                  <p className="text-gray-500">Name: {user.name}</p>
+                  <p className="text-gray-600">
+                    Address: {userDetails.address || "N/A"}
+                  </p>
+                  <p className="text-gray-600">
+                    Card: {userDetails.card || "N/A"}
+                  </p>
+                </div>
+                <button
+                  onClick={() => deleteUser(user.email)}
+                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                >
+                  Delete User
+                </button>
+              </div>
+            );
+          })
         ) : (
           <p className="text-gray-500">No users found.</p>
         )}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Home from "../assets/home.svg";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -8,9 +8,22 @@ function Profile({ user }) {
   const cartItems = JSON.parse(localStorage.getItem(user)) || [];
   const cartNumber = cartItems.length;
 
-  // Find the user's name based on their email
+  // Find user data
   const currentUser = existingUsers.find((u) => u.email === user);
   const name = currentUser ? currentUser.name : "Unknown";
+
+  // Load existing address & card details
+  const storedUserDetails =
+    JSON.parse(localStorage.getItem(`user_${user}`)) || {};
+  const [address, setAddress] = useState(storedUserDetails.address || "");
+  const [card, setCard] = useState(storedUserDetails.card || "");
+
+  // Save updated data
+  const handleSave = () => {
+    const updatedDetails = { address, card };
+    localStorage.setItem(`user_${user}`, JSON.stringify(updatedDetails));
+    alert("Profile updated successfully!");
+  };
 
   const signOut = () => {
     navigate("/login");
@@ -36,6 +49,38 @@ function Profile({ user }) {
         <h1 className="text-lg font-semibold text-gray-700 text-center mb-6">
           Items in Cart: <span className="font-normal">{cartNumber}</span>
         </h1>
+
+        {/* Address Input */}
+        <div className="mb-4">
+          <label className="block text-gray-600">Address</label>
+          <input
+            type="text"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+        </div>
+
+        {/* Card Number Input */}
+        <div className="mb-4">
+          <label className="block text-gray-600">Card Number</label>
+          <input
+            type="text"
+            value={card}
+            onChange={(e) => setCard(e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+        </div>
+
+        {/* Save Changes Button */}
+        <button
+          className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition mb-4"
+          onClick={handleSave}
+        >
+          Save Changes
+        </button>
+
+        {/* Sign Out Button */}
         <button
           className="w-full py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
           onClick={signOut}

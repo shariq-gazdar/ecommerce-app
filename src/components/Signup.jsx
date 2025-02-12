@@ -57,8 +57,8 @@ function Signup(props) {
   };
 
   return (
-    <div className="flex items-center justify-center  bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
-      <div className="bg-white shadow-xl rounded-lg p-8 w-96 h-fit my-5">
+    <div className="flex items-center justify-center  bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 h-screen">
+      <div className="bg-white shadow-xl rounded-lg py-8 px-4 w-96  my-5">
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">
           Sign Up
         </h1>

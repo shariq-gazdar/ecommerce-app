@@ -3,9 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 
 function Login(props) {
   const [loginMatch, setLoginMatch] = useState(false);
-  const navigate = useNavigate(); // Using useNavigate hook
+  const navigate = useNavigate();
   const adminEmail = "admin@gmail.com";
-  const adminPass = "admin";
+  const adminPass = "123456";
   const handleSubmit = (e) => {
     e.preventDefault();
 

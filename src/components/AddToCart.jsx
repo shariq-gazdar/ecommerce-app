@@ -5,11 +5,19 @@ import { Link } from "react-router-dom";
 function AddToCart({ user }) {
   const [checkoutVisible, setCheckoutVisible] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+  const [userDetails, setUserDetails] = useState({ address: "", card: "" });
+  const [userFormVisible, setUserFormVisible] = useState(false);
+  const [formData, setFormData] = useState({ address: "", card: "" });
 
-  // Load cart from localStorage when component mounts
+  // Load cart and user details from localStorage
   useEffect(() => {
     const storedItems = JSON.parse(localStorage.getItem(user)) || [];
     setCartItems(storedItems);
+
+    const savedUser = JSON.parse(localStorage.getItem(`user_${user}`));
+    if (savedUser) {
+      setUserDetails(savedUser);
+    }
   }, [user]);
 
   // Converts price strings like "Rs.1,299.50" to a number
@@ -32,31 +40,45 @@ function AddToCart({ user }) {
         updatedCartItems.splice(index, 1);
       }
 
-      // Update localStorage after state updates
       localStorage.setItem(user, JSON.stringify(updatedCartItems));
-
       return updatedCartItems;
     });
   };
 
+  // Handle checkout button click
+  const handleCheckout = () => {
+    const savedUser = JSON.parse(localStorage.getItem(`user_${user}`));
+    if (!savedUser) {
+      setUserFormVisible(true);
+    } else {
+      setCheckoutVisible(true);
+    }
+  };
+
+  // Save user details and continue checkout
+  const saveUserDetails = () => {
+    if (!formData.address || !formData.card) {
+      alert("Please fill in all details.");
+      return;
+    }
+    localStorage.setItem(`user_${user}`, JSON.stringify(formData));
+    setUserDetails(formData);
+    setUserFormVisible(false);
+    setCheckoutVisible(true);
+  };
+
   // Confirm checkout
   const handleCheckoutConfirm = () => {
-    // Retrieve existing orders for the user
     const existingOrders =
       JSON.parse(localStorage.getItem(`orders_${user}`)) || [];
-
-    // Append new order
     const updatedOrders = [
       ...existingOrders,
-      { cartItems, date: new Date().toISOString() },
+      { cartItems, date: new Date().toISOString(), userDetails },
     ];
-
-    // Save back to localStorage
     localStorage.setItem(`orders_${user}`, JSON.stringify(updatedOrders));
 
     console.log("Order Placed:", updatedOrders);
 
-    // Clear cart after checkout
     setCartItems([]);
     localStorage.removeItem(user);
     setCheckoutVisible(false);
@@ -64,10 +86,51 @@ function AddToCart({ user }) {
 
   return (
     <div className="min-h-svh bg-gray-100 flex flex-col items-center py-6">
+      {/* User Details Form Modal */}
+      {userFormVisible && (
+        <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h1 className="text-lg font-bold mb-4">Enter Your Details</h1>
+            <input
+              type="text"
+              placeholder="Address"
+              className="w-full p-2 border rounded mb-2"
+              value={formData.address}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, address: e.target.value }))
+              }
+            />
+            <input
+              type="text"
+              placeholder="Credit Card Number"
+              className="w-full p-2 border rounded mb-4"
+              value={formData.card}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, card: e.target.value }))
+              }
+            />
+            <div className="flex justify-center gap-4">
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded"
+                onClick={saveUserDetails}
+              >
+                Save & Continue
+              </button>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded"
+                onClick={() => setUserFormVisible(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Checkout Confirmation Modal */}
       {checkoutVisible && (
         <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black/50 z-50">
-          <div className="bg-gray-100 font-bold px-10 py-5 rounded-lg shadow-lg">
+          <div className="bg-white font-bold px-10 py-5 rounded-lg shadow-lg">
             <h1 className="text-lg">Confirm Checkout</h1>
             <h1 className="text-center text-red-600">
               Total Bill: Rs.{total.toFixed(2)}
@@ -141,7 +204,7 @@ function AddToCart({ user }) {
             cartItems.length === 0 ? "opacity-50 cursor-not-allowed" : ""
           }`}
           disabled={cartItems.length === 0}
-          onClick={() => setCheckoutVisible(true)}
+          onClick={handleCheckout}
         >
           Checkout ({cartItems.reduce((acc, item) => acc + item.quantity, 0)}{" "}
           items)
