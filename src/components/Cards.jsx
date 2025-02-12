@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Notify from "./Notify";
+import Modal from "./Modal";
 function Cards(props) {
   const [prod, setProd] = useState([]);
   const [notify, setNotify] = useState(false);
+  const [name, setName] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [price, setPrice] = useState(null);
+  const [image, setImage] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
   let cartProducts = [];
   useEffect(() => {
     let products = [
@@ -236,18 +243,25 @@ function Cards(props) {
     localStorage.setItem(props.user, JSON.stringify(cartItems));
   };
 
-  const cartUpdating = (e) => {
-    props.setCart(props.cart + 1);
-    setNotify(!notify);
-    setTimeout(() => {
-      setNotify(false);
-    }, 1000);
-    console.log(props.cart);
-    addToCart(e);
+  const cartUpdating = (name, description, price, image) => {
+    // props.setCart(props.cart + 1);
+    // setNotify(!notify);
+    // setTimeout(() => {
+    //   setNotify(false);
+    // }, 1000);
+    // console.log(props.cart);
+    // addToCart(e);
+    setName(name);
+    setDescription(description);
+    setPrice(price);
+    setImage(image);
+    setModalOpen(true);
+    console.log(modalOpen);
   };
   return (
     <>
       <Notify notify={notify} />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-8 bg-gray-50">
         {prod.map((product, index) => (
           <div
@@ -269,7 +283,14 @@ function Cards(props) {
               </p>
               <button
                 className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600 font-semibold"
-                onClick={cartUpdating}
+                onClick={() => {
+                  cartUpdating(
+                    product.name,
+                    product.description,
+                    product.price,
+                    product.image
+                  );
+                }}
               >
                 Add To Cart
               </button>
@@ -277,6 +298,18 @@ function Cards(props) {
           </div>
         ))}
       </div>
+      {modalOpen && (
+        <Modal
+          onClose={setModalOpen}
+          name={name}
+          description={description}
+          price={price}
+          image={image}
+          user={props.user}
+          cart={props.cart}
+          setCart={props.setCart}
+        />
+      )}
     </>
   );
 }

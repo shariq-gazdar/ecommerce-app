@@ -10,20 +10,25 @@ function AddToCart({ user }) {
   });
 
   const numFy = (num) => Number(num.replace(/[^\d]/g, ""));
-  const total = cartItems.reduce((acc, item) => acc + numFy(item.price), 0);
+  const total = cartItems.reduce(
+    (acc, item) => acc + numFy(item.price) * item.quantity,
+    0
+  );
 
   const removeItem = (index) => {
     const updatedCartItems = [...cartItems];
-    updatedCartItems.splice(index, 1);
+    if (updatedCartItems[index].quantity > 1) {
+      updatedCartItems[index].quantity -= 1;
+    } else {
+      updatedCartItems.splice(index, 1);
+    }
     setCartItems(updatedCartItems);
     localStorage.setItem(user, JSON.stringify(updatedCartItems));
   };
 
   const handleCheckoutConfirm = () => {
-    setCartItems([]);
-    localStorage.removeItem(user);
+    localStorage.setItem("orders", JSON.stringify(cartItems));
     setCheckoutVisible(false);
-    alert("Check out completed!");
   };
 
   return (
@@ -69,11 +74,11 @@ function AddToCart({ user }) {
             >
               <div>
                 <h2 className="text-lg font-semibold text-gray-800">
-                  {cartItem.name}
+                  {cartItem.name} (x{cartItem.quantity})
                 </h2>
                 <p className="text-gray-600">{cartItem.description}</p>
                 <p className="text-gray-700 font-medium">
-                  Price: Rs.{cartItem.price}
+                  Price: Rs.{cartItem.price} each
                 </p>
               </div>
               <button
@@ -102,7 +107,8 @@ function AddToCart({ user }) {
           disabled={cartItems.length === 0}
           onClick={() => setCheckoutVisible(true)}
         >
-          Checkout ({cartItems.length} items)
+          Checkout ({cartItems.reduce((acc, item) => acc + item.quantity, 0)}{" "}
+          items)
         </button>
       </div>
     </div>
